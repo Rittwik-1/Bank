@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>BankApp Admin</title>
+  <!-- plugins:css -->
+  <!-- <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
+  
+  <link rel="stylesheet" href="{% static 'css/vendor.bundle.base.css' %}">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- endinject -->
+  <!-- <link rel="shortcut icon" href="../../images/favicon.png" /> -->
+</head>
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="navbar-brand-wrapper d-flex justify-content-center">
+        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+          <a class="navbar-brand brand-logo" href="{% url 'dashboard' %}">
+            BankApp
+          </a>
+          <a class="navbar-brand brand-logo-mini" href="index.html"><img src="../../images/logo-mini.svg" alt="logo"></a>
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item d-none d-lg-block">
+            <h4 class="mb-0">Deposit/Withdraw</h4>
+          </li>
+          <li class="nav-item d-none d-lg-block">
+            <h4 class="mb-0"> <a href="/downloadbankaccounts">Download statement </a> </h4>
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item nav-profile dropdown mr-0 mr-sm-3">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <img src="https://via.placeholder.com/40x40" alt="profile"/>
+              <span class="nav-profile-name mr-2">{{request.user.first_name}} {{request.user.last_name}}</span>              
+            </a>
+            <br>
+            <span class="nav-profile-name mr-2">Account Number: {{request.user.uuid}}</span>        <br>      
+            <span class="nav-profile-name mr-2">Amount: {{amount}}</span>              
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              <a class="dropdown-item" href="{% url 'logout' %}">
+                <i class="mdi mdi-logout text-primary"></i>
+                Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="mdi mdi-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="pages/widgets/widgets.html">
+              <i class="mdi mdi-currency-inr menu-icon"></i>
+              <span class="menu-title">Credit</span>
+            </a>
+          </li> -->
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Deposit and Withdraw Your Money</h4>
+                  <!-- <p class="card-description">
+                    Basic form elements
+                  </p> -->
+                  <form class="forms-sample" method="post" >
+                    {% csrf_token %}
+                   
+                    <div class="form-group">
+                      <label for="exampleInputName1">User Name: </label>
+                      {{request.user.first_name}} {{request.user.last_name}}
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="exampleInputPassword4">Select Transaction Type</label>
+                      <select name="transaction_type">
+                        <option value="deposit">Deposit</option>
+                        <option value="withdrawal">Withdrawal</option>
+                      </select>
+                    </div>
+
+                    
+
+                    <div class="form-group">
+                      <label for="exampleSelectGender">Enter Transaction Amount</label>
+                      {{form.transaction_amount}}
+                      </div>
+
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                  </form>
+                  
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <!-- content-wrapper ends -->
+
+
+
+   <!-- partial -->
+   <div class="main-panel">
+    <div class="content-wrapper">
+      <div class="row">
+        <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Transactions Money</h4>
+              <!-- <p class="card-description">
+                Basic form elements
+              </p> -->
+              <form class="forms-sample" method="post" action="/transactions/">
+                {% csrf_token %}
+               
+                <div class="form-group">
+                  <label for="exampleInputName1">Receiver Account Number</label>
+                  <input type="text" name="user" placeholder="Receiver Account Number">
+                </div>
+                
+              
+                <div class="form-group">
+                  <label for="exampleSelectGender">Enter Transaction Amount</label>
+                  {{form.transaction_amount}}
+                  </div>
+
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+              </form>
+              
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+</body>
+
+</html>
+
