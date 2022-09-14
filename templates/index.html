@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>BankApp Admin</title>
+  <!-- plugins:css -->
+  <!-- <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
+  
+  <link rel="stylesheet" href="{% static 'css/vendor.bundle.base.css' %}">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- endinject -->
+  <!-- <link rel="shortcut icon" href="../../images/favicon.png" /> -->
+</head>
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">
+              <i class="mdi mdi-bank menu-icon"></i>
+              <span class="menu-title">Deposit/Withdraw</span>
+            </a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="pages/widgets/widgets.html">
+              <i class="mdi mdi-currency-inr menu-icon"></i>
+              <span class="menu-title">Credit</span>
+            </a>
+          </li> -->
+        </ul>
+      </nav>
+
+
+
+
+
+
+        <div class="navbar-brand-wrapper d-flex justify-content-center">
+          <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+            <a class="navbar-brand brand-logo" href="{% url 'dashboard' %}">
+              BankApp
+            </a>
+            <a class="navbar-brand brand-logo-mini" href="index.html"><img height="40px" src="/media/The_World_Bank_logo.svg.png" alt="logo"></a>
+            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+              <span class="mdi mdi-menu"></span>
+            </button>
+          </div>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+          
+  
+       
+  
+  
+  
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-profile dropdown mr-0 mr-sm-3">
+              <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                <img src="https://via.placeholder.com/40x40" alt="profile"/>
+                <span class="nav-profile-name mr-2">Hi {{request.user.first_name}} {{request.user.last_name}}</span>              
+              </a>
+              <br>
+              <span class="nav-profile-name mr-2">Account Number: {{request.user.uuid}}</span>        <br>      
+              <span class="nav-profile-name mr-2">Balance: {{amount}}</span>  
+              {% if request.user.credit_card %}          <br>
+              <span class="nav-profile-name mr-2">Credit Card: {{request.user.credit_card}}</span>   
+              {% endif %}             
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+               
+              </div>
+            </li>
+            <a class="" href="{% url 'logout' %}">
+              <i class="mdi mdi-logout text-primary"></i>
+              Logout
+            </a>
+          </ul>
+          
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+       
+
+        <div class="navbar-nav mr-lg-2 text-center ">
+          {% if not request.user.credit_card %}
+     
+          <h4 class="mb-2"> <a href="/createCard">Buy Credit Card</a> </h4>
+      {% endif %}
+            <h4 class="mb-3"> <a href="/downloadbankaccounts">Download statement </a> </h4>
+       
+        </div>
+
+
+      
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Deposit and Withdraw Your Money</h4>
+                  <!-- <p class="card-description">
+                    Basic form elements
+                  </p> -->
+                  <form class="forms-sample" method="post" >
+                    {% csrf_token %}
+                   
+                    <div class="form-group">
+                      <label for="exampleInputName1">User Name: </label>
+                      {{request.user.first_name}} {{request.user.last_name}}
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="exampleInputPassword4">Select Transaction Type:</label>
+                      <select name="transaction_type">
+                        <option value="deposit">Deposit</option>
+                        <option value="withdrawal">Withdrawal</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group mb-1">
+                      <label for="exampleSelectGender">Enter Transaction Amount:</label>
+                      {{form.transaction_amount}}
+                      </div>
+
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                  </form>
+                  
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <!-- content-wrapper ends -->
+
+
+
+   <!-- partial -->
+   <div class="main-panel">
+    <div class="content-wrapper">
+      <div class="row">
+        <div class="col-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Transactions Money</h4>
+              <!-- <p class="card-description">
+                Basic form elements
+              </p> -->
+              <form class="forms-sample" method="post" action="/transactions/">
+                {% csrf_token %}
+               
+                <div class="form-group">
+                  <label for="exampleInputName1">Receiver Account Number:</label>
+                  <input type="text" name="user" placeholder="Receiver Account Number">
+                </div>
+                
+              
+                <div class="form-group mb-1">
+                  <label for="exampleSelectGender">Enter Transaction Amount:</label>
+                  {{form.transaction_amount}}
+                  </div>
+
+                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+              </form>
+              
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- content-wrapper ends -->
+
+
+
+
+
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+          <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022 <a href="#" target="_blank">BankApp</a>. All rights reserved.</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart text-danger"></i></span>
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- plugins:js -->
+  <script src="{% static 'js/vendor.bundle.base.js' %}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="{% static 'js/off-canvas.js' %}"></script>
+  <script src="{% static 'js/hoverable-collapse.js' %}"></script>
+  <script src="{% static 'js/template.js' %}"></script>
+  <script src="{% static 'js/settings.js' %}"></script>
+  <script src="{% static 'js/todolist.js' %}"></script>
+  <script src="{% static 'js/dashboard.js' %}"></script>
+
+</body>
+
+</html>
+
