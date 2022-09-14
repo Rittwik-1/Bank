@@ -1,6 +1,5 @@
 from rest_framework import generics
 from .serializers import *
-from rest_framework import permissions
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework.views import APIView
@@ -12,10 +11,10 @@ from django.db.models import F
 from django.http.response import HttpResponse
 from rest_framework.renderers import TemplateHTMLRenderer
 from django.shortcuts import redirect
-import json
 from django.shortcuts import render
+import csv
+import random
 
-import requests
 
 
 
@@ -94,6 +93,7 @@ class CreateTransactionAPI(generics.CreateAPIView):
                     transaction_amount=transaction_amount,
                     ts_type=2
                 )
+                
             
             elif account_type == "withdrawal":
                 if bank_act.account_balance > 50 and bank_act.account_balance > float(transaction_amount):
@@ -105,76 +105,16 @@ class CreateTransactionAPI(generics.CreateAPIView):
                     transaction_amount=transaction_amount,
                     ts_type=3
                 )
+                
                 else:
                     return HttpResponse("Sorry bank balance low, can't withdrawal",status=404)
             
-                    
-            # serializer = TransactionSerializer(data=request.data)
-            # print(serializer.is_valid())       
-            # if serializer.is_valid():
-            #     user_id = serializer.validated_data['user']
-            #     account_type = serializer.validated_data['account_type']
-            #     transaction_type = serializer.validated_data['transaction_type']
-            #     transaction_amount = serializer.validated_data['transaction_amount']
-                # bank_account = BankAccount.objects.get(id=account_type.pk, user_id=user_id)
-                
-                            
-                # if bank_account:   # CONFIRM IF THIS ACCOUNT EXISTS BEFORE MAKING ANY CHANGES
-                #     if transaction_type == 'deposit':
-                #         bank_account.account_balance = F('account_balance') + transaction_amount
-                #         bank_account.save()
-                #         serializer.save()
-                #         return Response(status=status.HTTP_201_CREATED)
-                        
-                #     elif transaction_type == 'withdrawal':
-                #         if bank_account.account_type == 'savings':
-                #             if bank_account.account_balance > 50 and bank_account.account_balance > transaction_amount:
-                #                 new_savings_balance = bank_account.account_balance - transaction_amount 
-                #                 if new_savings_balance >= 50:                                                # CHECK THAT NEW BALANCE WON'T BE LESS THAN 50
-                #                     bank_account.account_balance = F('account_balance') - transaction_amount
-                #                     bank_account.save()
-                #                     serializer.save()
-                #                     return Response(status=status.HTTP_201_CREATED)
-                #                 else:
-                #                     return Response(status=status.HTTP_400_BAD_REQUEST)                            
-                #             else:
-                #                 return Response(status=status.HTTP_400_BAD_REQUEST)
-                        
-                #         elif bank_account.account_type == 'credit':
-                #             if bank_account.account_balance > 0 :
-                #                 new_credit_balance = bank_account.account_balance - transaction_amount
-                #                 if new_credit_balance >= 0:                                              # CHECK THAT NEW BALANCE WON'T BE LESS THAN -20000
-                #                     bank_account.account_balance = F('account_balance') - transaction_amount
-                #                     bank_account.save()
-                #                     serializer.save()
-                #                     return Response(status=status.HTTP_201_CREATED)
-                #                 else:
-                #                     return Response(status=status.HTTP_400_BAD_REQUEST) 
-                #             else:
-                #                 return Response(status=status.HTTP_400_BAD_REQUEST)
             serializer = TransactionSerializer()
             form = TransactionsForm()
             return Response({'serializer': serializer,'form':form,"amount":request.user.bankaccount.all()[0].account_balance})
         except Exception as e:
             return HttpResponse(f"ERROR Invalid Credentials {e}",status=404)
 
-
-
-# API ENDPOINT TO SHOW ACCOUNT DETAILS FOR LOGGED-IN USER USING BANKACCOUNT SERIALIZER
-# class ViewBankAccountUser(generics.ListAPIView):
-#     '''
-#     VIEW ACCOUNT INFO FOR LOGGED IN USER
-#     '''
-#     serializer_class = BankAccountSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-#     def get_queryset(self):
-#         logged_in_user = self.request.user     # FOR LOGGED IN USERS      
-#         queryset = logged_in_user.bankaccount.all()
-#         return queryset
-
-
-import csv
 
 def downloadBankAccounts(request):
     '''
@@ -187,22 +127,21 @@ def downloadBankAccounts(request):
     
     writer = csv.writer(response)
     writer.writerow(["Sender","Receiver","Amount","Transactions Type","Date"])
-    
-    for i in Transactions.objects.filter(user=request.user,ts_type=1).order_by('-transaction_date'):
-        writer.writerow([i.user,i.receiver,i.transaction_amount,"Send Money",i.transaction_date.__str__()])
-    
-    for i in Transactions.objects.filter(user=request.user,ts_type=2).order_by('-transaction_date'):
-        writer.writerow([i.user,i.receiver,i.transaction_amount,"Deposit",i.transaction_date.__str__()])
-        
-    for i in Transactions.objects.filter(user=request.user,ts_type=3).order_by('-transaction_date'):
-        writer.writerow([i.user,i.receiver,i.transaction_amount,"Withdraw",i.transaction_date.__str__()])
 
-    for i in Transactions.objects.filter(user=request.user,ts_type=4).order_by('-transaction_date'):
-        writer.writerow([i.user,i.receiver,i.transaction_amount,"Credit Card",i.transaction_date.__str__()])
-        
-    for i in Transactions.objects.filter(receiver=request.user,ts_type=1).order_by('-transaction_date'):
-        writer.writerow([i.user,i.receiver,i.transaction_amount,"Receive Money",i.transaction_date.__str__()])
 
+    transaction_type = {
+        "1": "Send Money",
+        "2": "Deposit",
+        "3": "Withdraw",
+        "4": "Credit Card",
+        "5": "Receive Money"
+    }
+    
+    for i in Transactions.objects.filter(user=request.user).order_by("-date_created"):
+        transaction_type_ex = transaction_type.get(i.ts_type)
+        writer.writerow([i.user,i.receiver,i.transaction_amount,transaction_type_ex,i.transaction_date.__str__()])
+    
+    
 
     return response
     
@@ -232,6 +171,7 @@ class transactions(generics.CreateAPIView):
                     Transactions.objects.create(ts_type=1,user=request.user,
                                                 receiver=CustomUser.objects.get(uuid=request.POST.get('user')),
                                                 transaction_amount=amount)
+                
 
                     return redirect("dashboard")
                 else:
@@ -240,10 +180,7 @@ class transactions(generics.CreateAPIView):
                     return HttpResponse(f"No user found {e}",status=404)
 
 
-        
-
-import random
-
+    
 class createCard(generics.CreateAPIView):
         renderer_classes = [TemplateHTMLRenderer]
         template_name = 'index.html'
