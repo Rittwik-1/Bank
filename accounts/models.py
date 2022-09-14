@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
@@ -33,13 +34,16 @@ class UserManager(BaseUserManager):
 
 import uuid
 import random
+
 class CustomUser(AbstractUser):
 
-    uuid = models.UUIDField(default=uuid.uuid4)
+    uuid = models.IntegerField(blank=True,null=True)
     username = None
     first_name = models.CharField(verbose_name='First Name', max_length=100, )
     last_name = models.CharField(verbose_name='Last Name', max_length=100, )
     email = models.EmailField(db_index=True, unique=True,)
+    
+    credit_card = models.IntegerField(null=True,default=None,blank=True)
     
     
     objects = UserManager()
@@ -53,5 +57,12 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.first_name
 
-
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+                while True:
+                    self.uuid =  random.randint(000000000000,999999999999)
+                    if not self.__class__.objects.filter(uuid=self.uuid):
+                        break
+   
+        super(CustomUser, self).save(*args, **kwargs)
 

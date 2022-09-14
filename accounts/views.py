@@ -12,7 +12,6 @@ from django.urls import reverse_lazy
 from django.shortcuts import  render, redirect
 from django.contrib.auth import views
 from django.views.generic import TemplateView
-from rest_framework import  status
 # CREATE NEW USER VIA API
 
 class CreateCustomUser(generics.CreateAPIView):
@@ -46,26 +45,26 @@ class CreateCustomUser(generics.CreateAPIView):
                 
                 
             return redirect(reverse_lazy('login'))
-        return Response({'serializer': serializer,'form':form},status=status.HTTP_201_CREATED)
+        return Response({'serializer': serializer,'form':form})
 
 
 
 # API ENDPOINT TO SHOW ACCOUNT DETAILS FOR LOGGED-IN USER USING CUSTOMUSER SERIALIZER
 
-class ViewUserAccount(generics.ListAPIView):
-    '''
-    VIEW ACCOUNT INFO FOR LOGGED IN USER:
-    URL: 'http://127.0.0.1:8000/viewuseraccount/'
+# class ViewUserAccount(generics.ListAPIView):
+#     '''
+#     VIEW ACCOUNT INFO FOR LOGGED IN USER:\n
+#     URL: 'http://127.0.0.1:8000/viewuseraccount/'
     
-    '''
-    serializer_class = CustomUserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+#     '''
+#     serializer_class = CustomUserSerializer
+#     permission_classes = [permissions.IsAuthenticated]
     
     
-    def get_queryset(self):
-        logged_in_user = self.request.user.id  
-        queryset = CustomUser.objects.filter(id = logged_in_user)
-        return queryset
+#     def get_queryset(self):
+#         logged_in_user = self.request.user.id  
+#         queryset = CustomUser.objects.filter(id = logged_in_user)
+#         return queryset
 
 
 class DashboardView(TemplateView):
