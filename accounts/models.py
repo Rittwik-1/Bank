@@ -32,7 +32,6 @@ class UserManager(BaseUserManager):
         user.save(using = self.db)
         return user
 
-import uuid
 import random
 
 class CustomUser(AbstractUser):

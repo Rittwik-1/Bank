@@ -1,16 +1,12 @@
-from urllib import request
-
 from banking.models import BankAccount
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 from .forms import Auth_from, UserForm
 from rest_framework import generics
-from rest_framework import permissions
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from django.urls import reverse_lazy
 from django.shortcuts import  render, redirect
-from django.contrib.auth import views
 from django.views.generic import TemplateView
 # CREATE NEW USER VIA API
 
@@ -47,24 +43,6 @@ class CreateCustomUser(generics.CreateAPIView):
             return redirect(reverse_lazy('login'))
         return Response({'serializer': serializer,'form':form})
 
-
-
-# API ENDPOINT TO SHOW ACCOUNT DETAILS FOR LOGGED-IN USER USING CUSTOMUSER SERIALIZER
-
-# class ViewUserAccount(generics.ListAPIView):
-#     '''
-#     VIEW ACCOUNT INFO FOR LOGGED IN USER:\n
-#     URL: 'http://127.0.0.1:8000/viewuseraccount/'
-    
-#     '''
-#     serializer_class = CustomUserSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-    
-#     def get_queryset(self):
-#         logged_in_user = self.request.user.id  
-#         queryset = CustomUser.objects.filter(id = logged_in_user)
-#         return queryset
 
 
 class DashboardView(TemplateView):
