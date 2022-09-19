@@ -25,18 +25,18 @@ urlpatterns = [
     # path('viewuseraccount/', ViewUserAccount.as_view(),name="viewuseraccount"),
     
 
-    path('createbankaccountapi/', CreateBankAccountAPI.as_view()),
+    path('createbankaccountapi/', CreateBankAccountAPI.as_view(),name = "CreateBankAccountAPI"),
     # path('createtransactionapi/', CreateTransactionAPI.as_view()),
     path('dashboard/', CreateTransactionAPI.as_view(),name="dashboard"),
 
 
     # API ENDPOINT TO SHOW ACCOUNT DETAILS FOR LOGGED-IN USER USING BANKACCOUNT SERIALIZER
     # path('viewbankaccountuser/', ViewBankAccountUser.as_view()),
-    path('transactions/', transactions.as_view()),
+    path('transactions/', transactions.as_view(),name="transactions"),
     
     # CSV DOWNLOAD
-    path('downloadbankaccounts/', downloadBankAccounts),
-    path('createCard/', createCard.as_view()),
+    path('downloadbankaccounts/', downloadBankAccounts,name="downloadbankaccounts"),
+    path('createCard/', createCard.as_view(),name="createCard"),
     
 
 
@@ -44,9 +44,6 @@ urlpatterns = [
     path('', login_view, name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
 
-    # DRF AUTH
-    # path('api-auth/', include('rest_framework.urls')),
-    # path('', include('rest_framework.urls')),
 
     # path('iommi-form-test/', Form.create(auto__model=CustomUser).as_view()),
 ]

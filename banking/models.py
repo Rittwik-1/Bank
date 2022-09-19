@@ -31,3 +31,4 @@ class Transactions(models.Model):
 
     def __str__(self):
         return self.receiver.first_name
+

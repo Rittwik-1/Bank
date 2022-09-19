@@ -1,4 +1,3 @@
-from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
@@ -16,6 +15,8 @@ class UserManager(BaseUserManager):
         user.last_name = last_name
         user.save(using = self.db)
         return user
+
+
 
     def create_superuser(self, email, first_name, last_name, password=None,):
         if not email:

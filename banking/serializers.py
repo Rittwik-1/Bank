@@ -11,7 +11,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Transactions
-        fields = [ 'id', 'transaction_date', 'account_type', 'user', 'transaction_type', 'transaction_amount', ]
+        fields = [ 'id', 'transaction_date', 'account_type', 'user', 'ts_type', 'transaction_amount', ]
         
 
 
@@ -22,9 +22,8 @@ class BankAccountSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = BankAccount
-        fields = ['id', 'date', 'account_type', 'user', 'account_balance', 'accounttransactions']
+        fields = [ 'date', 'account_type', 'user', 'account_balance', 'accounttransactions']
         extra_kwargs = {
             'account_balance': {'read_only': True},
-            
-            }
+        }
             

@@ -11,12 +11,8 @@ from django.views.generic import TemplateView
 # CREATE NEW USER VIA API
 
 class CreateCustomUser(generics.CreateAPIView):
-    '''
-    CURL COMMAND TO CREATE NEW USER
-    curl --data "email=newuser@pp.com&first_name=newuserfirstname&last_name=newuserfirstname&password=1234" http://127.0.0.1:8000/register/
-
-    URL: http://127.0.0.1:8000/register/
-    '''
+    
+    
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'register.html'
     queryset = CustomUser.objects.all()

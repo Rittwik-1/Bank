@@ -1,8 +1,6 @@
 from rest_framework import generics
 from .serializers import *
 from rest_framework.response import Response
-from django.http import Http404
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import BankAccount
@@ -11,11 +9,8 @@ from django.db.models import F
 from django.http.response import HttpResponse
 from rest_framework.renderers import TemplateHTMLRenderer
 from django.shortcuts import redirect
-from django.shortcuts import render
 import csv
 import random
-
-
 
 
 # CREATE BANK ACCOUNT VIA API
@@ -40,29 +35,6 @@ class CreateBankAccountAPI(generics.CreateAPIView):
 
 
 # UPDATE BANK ACCOUNT VIA API
-
-class BankAccountUpdate(APIView):
- 
-    def get(self, request, pk):
-        account = self.get_object(pk)
-        serializer = BankAccountSerializer(account)
-        return Response(serializer.data)
-
-    def get_object(self, pk, ):
-        
-        try:
-            user_id = self.request.data.get('user')
-            return BankAccount.objects.get(pk=pk, user_id = user_id)    # THE USER ID AND ACCOUNT ID MUST MATCH AN EXISTING ACCOUNT
-        except BankAccount.DoesNotExist:
-            raise Http404
-
-    def put(self, request, pk, format=None):
-        account = self.get_object(pk)
-        serializer = BankAccountSerializer(account, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # MAKE DEPOSITS AND WITHDRAWALS VIA API
