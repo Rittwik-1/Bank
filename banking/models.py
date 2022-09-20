@@ -1,8 +1,12 @@
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
-from .constants import *
+from banking.constants import account_type, om_ch
 
+
+"""
+this model is to create a bank account
+"""
 
 class BankAccount(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='bankaccount', on_delete=models.CASCADE, )
@@ -14,12 +18,10 @@ class BankAccount(models.Model):
         return self.account_type
 
     
-om_ch = (
-    (1,"send"),
-    (2,"deposit"),
-    (3,"withdraw"),
-    (4,"Credit Card")
-)
+"""
+This model is used to do the transcation
+"""
+
 class Transactions(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='transactions', on_delete=models.CASCADE, )

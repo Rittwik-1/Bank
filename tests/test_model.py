@@ -3,6 +3,7 @@ from django.test import TestCase, Client
 from banking.models import *
 from accounts.serializers import *
 from banking.serializers import *
+from django.db.models import F
 
 
 class TestAccountModels(TestCase):
@@ -65,8 +66,22 @@ class TestAccountModels(TestCase):
         
 
     
-
+        transaction_payload = {
+            "user": bank.user,
+            "receiver": bank_other.user,
+            "transaction_amount": 1000,
+            "ts_type": 1 #send the money to other user.
+        }
+   
+        transaction = Transactions.objects.create(**transaction_payload)
         
+        if transaction_payload.get('user') == transaction.user and transaction_payload.get('receiver') == transaction.receiver:
+            self.assertEquals(Transactions.objects.count(), 1)
+
+
+
+
+
 
 
      

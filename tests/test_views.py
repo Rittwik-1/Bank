@@ -1,15 +1,7 @@
-
-from http import HTTPStatus
-from django.db import models
 from accounts.views import login_view
 from django.test import TestCase,Client
 from  banking.models import *
 from django.urls import reverse,resolve
-from accounts.views import *
-from banking.views import CreateBankAccountAPI
-from banking.serializers import BankAccountSerializer
-from rest_framework import status
-
 
 class TestUrls(TestCase):
 

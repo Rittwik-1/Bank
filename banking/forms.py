@@ -1,8 +1,11 @@
 from django import forms
-from .models import Transactions
-from django.core.exceptions import ValidationError
-from django.forms import widgets
+from banking.models import Transactions
 
+
+"""
+This class is used to create a form for the Transactions model.
+this contians the fields that are required for the Transactions model like the account_number and the amount
+"""
 class TransactionsForm(forms.ModelForm):
 
     class Meta:

@@ -119,6 +119,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+# this is custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
