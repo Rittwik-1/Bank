@@ -1,5 +1,5 @@
 from rest_framework import generics
-from banking.serializers import *
+from banking.serializers import BankAccountSerializer,TransactionSerializer,Transactions,CustomUser
 from rest_framework.response import Response
 from rest_framework.response import Response
 from rest_framework import status
@@ -25,7 +25,7 @@ class CreateBankAccountAPI(generics.CreateAPIView):
         self.initial_balance = 0
         serializer = BankAccountSerializer(data=request.data)
                 
-        if serializer.is_valid():
+        if serializer.is_valid():   
             account_type = serializer.validated_data['account_type']
             if account_type == 'savings':
                 serializer.validated_data['account_balance'] = self.initial_balance           # INITIAL BALANCE
@@ -98,7 +98,8 @@ class CreateTransactionAPI(generics.CreateAPIView):
                 
             'serializer': serializer,
             'form':form,
-            "amount":request.user.bankaccount.all()[0].account_balance
+            "amount":request.user.bankaccount.all()[0].account_balance,
+            'status':200
             
             })
         except Exception as e:

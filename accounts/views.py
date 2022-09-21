@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import  render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate , login 
+from rest_framework import status
 
 
 # CREATE NEW USER VIA API
@@ -21,6 +22,7 @@ class CreateCustomUser(generics.CreateAPIView):
     template_name = 'register.html'
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+
 
     def get(self, request):
         serializer = CustomUserSerializer()
@@ -40,7 +42,7 @@ class CreateCustomUser(generics.CreateAPIView):
                 BankAccount.objects.create(user=user[0],account_type=request.POST.get("account_type"))# Create a bank account for the user
                 
             return redirect(reverse_lazy('login'))
-        return Response({'serializer': serializer,'form':form})
+        return Response({'serializer': serializer,'form':form},status=status.HTTP_201_CREATED)
 
 
 """
