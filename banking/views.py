@@ -1,9 +1,9 @@
 from rest_framework import generics
 from banking.serializers import BankAccountSerializer,TransactionSerializer,Transactions,CustomUser
 from rest_framework.response import Response
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.status import HTTP_200_OK,HTTP_404_NOT_FOUND
 from banking.models import BankAccount
+from rest_framework import status
 from banking.constants import transaction_type_csv
 from banking.forms import TransactionsForm
 from django.db.models import F
@@ -198,10 +198,10 @@ class createCard(generics.CreateAPIView):
                 
                 
                 else:
-                    return HttpResponse("Your have already buy credit card",status=404)
+                    return HttpResponse("Your have already buy credit card",status=HTTP_404_NOT_FOUND)
                     
             except Exception as e:
-                    return HttpResponse("No user found",status=404)
+                    return HttpResponse("No user found",status=HTTP_404_NOT_FOUND)
                 
             return redirect("dashboard")
 

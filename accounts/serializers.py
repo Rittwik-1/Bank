@@ -22,6 +22,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
         return user
 
+    
+
 
 
          

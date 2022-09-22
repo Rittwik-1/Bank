@@ -41,6 +41,7 @@ class CreateCustomUser(generics.CreateAPIView):
             if user.exists():
                 BankAccount.objects.create(user=user[0],account_type=request.POST.get("account_type"))# Create a bank account for the user
                 
+            
             return redirect(reverse_lazy('login'))
         return Response({'serializer': serializer,'form':form},status=status.HTTP_201_CREATED)
 
